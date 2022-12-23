@@ -67,9 +67,9 @@ export function createMatches(people: Person[]) {
 
 function pickMatch(person: Person) {
   let indexOfMatch = Math.floor(Math.random() * person.possibleMatches.length);
-  while (!person.possibleMatches[indexOfMatch]) {
-    indexOfMatch = Math.floor(Math.random() * person.possibleMatches.length);
-  }
+  // while (!person.possibleMatches[indexOfMatch]) {
+  //   indexOfMatch = Math.floor(Math.random() * person.possibleMatches.length);
+  // }
 
   return `${person.name}=>${person.possibleMatches[indexOfMatch]}`;
 }
