@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { AppFlowState } from "../../App";
 import { Person } from "../../models/Person";
 import NewPersonForm, { NewPersonFormProps } from "./newPersonForm";
-import PeopleList from "./peopleList";
+import PeopleCard from "./peopleCard";
 
 export type PeopleManagerProps = {
   people: Person[];
@@ -49,23 +49,25 @@ function PeopleManager(props: PeopleManagerProps) {
       <h1 className="text-xl font-bold p-6 text-center border-b-2">
         Participants
       </h1>
-      <div className="flex p-6 pb-0">
+      <div className="flex flex-col p-6 pb-0">
         {props.appFlowState === "people" &&
           props.people.length < maxNumOfPeople && (
-            <div className="min-w-fit">
-              <h1 className="text-l font-bold p-3 text-center">
-                Add someone else?
-              </h1>
+            <div className="bg-slate-800 rounded-xl p-4">
               <NewPersonForm {...newPersonFormProps} />
             </div>
           )}
         {props.people.length > 0 && (
-          <div className="p-6 flex flex-wrap">
-            <PeopleList
-              people={props.people}
-              deletePerson={deletePerson}
-              appFlowStateIsPeople={props.appFlowState === "people"}
-            />
+          <div className="p-2 flex flex-wrap h-fit">
+            {props.people.map((person) => (
+              <PeopleCard
+                {...{
+                  name: person.name,
+                  email: person.email,
+                  deletePerson,
+                  appFlowStateIsPeople: props.appFlowState === "people",
+                }}
+              />
+            ))}
           </div>
         )}
       </div>
