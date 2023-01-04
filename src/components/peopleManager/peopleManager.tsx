@@ -1,24 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { AppFlowState } from "../../App";
 import { Person } from "../../models/Person";
 import NewPersonForm, { NewPersonFormProps } from "./newPersonForm";
-import PeopleList from "./personList";
+import PeopleList from "./peopleList";
 
 export type PeopleManagerProps = {
   people: Person[];
   setPeople: React.Dispatch<React.SetStateAction<Person[]>>;
   appFlowState: AppFlowState;
   setAppFlowState: React.Dispatch<React.SetStateAction<AppFlowState>>;
-  setPossibilies: () => void;
+  setPossibilies: () => Promise<void>;
 };
 
 function PeopleManager(props: PeopleManagerProps) {
   const minNumOfPeople = 3;
   const maxNumOfPeople = 10;
-
-  const [appFlowStateIsPeople, setAppFlowStateIsPeople] = useState<boolean>(
-    props.appFlowState === "people"
-  );
 
   const addPerson = (newPerson: Person) => {
     props.setPeople([...props.people, newPerson]);
@@ -37,8 +33,8 @@ function PeopleManager(props: PeopleManagerProps) {
     addPerson,
   };
 
-  const setPeople = () => {
-    props.setPossibilies();
+  const setPeople = async () => {
+    await props.setPossibilies();
     props.setAppFlowState("rules");
   };
 
@@ -46,38 +42,56 @@ function PeopleManager(props: PeopleManagerProps) {
     props.setAppFlowState("people");
   };
 
-  useEffect(() => {
-    setAppFlowStateIsPeople(props.appFlowState === "people");
-  }, [props.appFlowState, props.people]);
+  useEffect(() => {}, [props.appFlowState, props.people]);
 
   return (
-    <>
-      <h1 className="text-xl font-bold p-3">People Manager</h1>
-      {appFlowStateIsPeople && props.people.length < maxNumOfPeople && (
-        <NewPersonForm {...newPersonFormProps} />
-      )}
-      {props.people.length > 0 && (
-        <PeopleList
-          people={props.people}
-          deletePerson={deletePerson}
-          appFlowStateIsPeople={appFlowStateIsPeople}
-        />
-      )}
-      {props.people.length >= minNumOfPeople && appFlowStateIsPeople && (
-        <button onClick={setPeople}>Set People</button>
-      )}
-      {props.people.length < minNumOfPeople && (
-        <div>You must have atleast 3 people to continue</div>
-      )}
-      {!appFlowStateIsPeople && (
-        <button onClick={moveToPeopleAppFlowState}>
-          Edit People (you will loose any rules you have created)
-        </button>
-      )}
-      {props.people.length >= maxNumOfPeople && (
-        <div>Max number of 10 people reached!</div>
-      )}
-    </>
+    <div className="flex flex-col">
+      <h1 className="text-xl font-bold p-6 text-center border-b-2">
+        Participants
+      </h1>
+      <div className="flex p-6 pb-0">
+        {props.appFlowState === "people" &&
+          props.people.length < maxNumOfPeople && (
+            <div className="min-w-fit">
+              <h1 className="text-l font-bold p-3 text-center">
+                Add someone else?
+              </h1>
+              <NewPersonForm {...newPersonFormProps} />
+            </div>
+          )}
+        {props.people.length > 0 && (
+          <div className="p-6 flex flex-wrap">
+            <PeopleList
+              people={props.people}
+              deletePerson={deletePerson}
+              appFlowStateIsPeople={props.appFlowState === "people"}
+            />
+          </div>
+        )}
+      </div>
+      <div className="p-6 flex flex-row-reverse">
+        <div>
+          {props.people.length >= minNumOfPeople &&
+            props.appFlowState === "people" && (
+              <button onClick={setPeople}>Set People</button>
+            )}
+          {!(props.appFlowState === "people") && (
+            <button onClick={moveToPeopleAppFlowState}>
+              Edit People (you will loose any rules you have created)
+            </button>
+          )}
+        </div>
+        <div className="text-red-800">
+          {props.people.length < minNumOfPeople && (
+            <div>You must have atleast 3 people to continue</div>
+          )}
+
+          {props.people.length >= maxNumOfPeople && (
+            <div>Max number of 10 people reached!</div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

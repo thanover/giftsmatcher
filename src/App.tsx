@@ -12,6 +12,7 @@ import RulesManager, {
 import { Person } from "./models/Person";
 import { Rule } from "./models/Rule";
 import {
+  finalResult,
   setPossibiliesOnPeople,
   updatePossibilitiesDueToRuleAdded,
   updatePossibilitiesDueToRuleDeleted,
@@ -31,6 +32,8 @@ function App() {
     new Person("Joe", "Joe@email.com"),
   ]);
   const [rules, setRules] = useState<Rule[]>([]);
+  const [finalResults, setFinalResults] = useState<finalResult>([]);
+  const [resultsLoading, setResultsLoading] = useState<boolean>(false);
 
   const updatePossibilities = (
     newRule: Rule,
@@ -42,12 +45,15 @@ function App() {
       updatePossibilitiesDueToRuleDeleted(people, newRule);
   };
 
-  const setPossibilies = () => {
-    setPossibiliesOnPeople(people);
+  const setPossibilies = async () => {
+    setPeople(await setPossibiliesOnPeople(people));
   };
 
-  const generateResults = () => {
-    createMatches(people);
+  const generateResults = async () => {
+    setResultsLoading(true);
+    setFinalResults(await createMatches(people));
+    setResultsLoading(false);
+    setAppFlowState("results");
   };
 
   useEffect(() => {
@@ -77,19 +83,45 @@ function App() {
   };
 
   const resultsViewProps: ResultsViewProps = {
-    people,
+    finalResults,
   };
 
   return (
-    <div className="bg-slate-900 text-white">
-      {<PeopleManager {...peopleManagerProps} />}
-      {appFlowState !== "start" && appFlowState !== "people" && (
-        <RulesManager {...rulesManagerProps} />
-      )}
-      {appFlowState !== "start" && appFlowState !== "people" && (
-        <button onClick={generateResults}>Generate Results</button>
-      )}
-      {appFlowState === "results" && <ResultsView {...resultsViewProps} />}
+    <div className="h-screen flex flex-col h-screen justify-between">
+      {/* HEADER */}
+      <header className="h-64 flex justify-center">
+        <div>HEADER</div>
+      </header>
+      {/* MAIN SECTION */}
+      <main className="w-full mb-auto flex-col justify-center pl-60 pr-60">
+        {/* PEOPLE MANAGER */}
+        <div className="flex-col bg-slate-700 h-fit m-2 rounded-lg">
+          {<PeopleManager {...peopleManagerProps} />}
+        </div>
+
+        {/* RESTRICTONS MANAGER */}
+
+        {appFlowState !== "start" &&
+          appFlowState !== "people" &&
+          people.length >= 3 && (
+            <div className="flex-col bg-slate-700 h-fit m-2 rounded-lg">
+              <RulesManager {...rulesManagerProps} />
+              <button onClick={generateResults}>Generate Results</button>
+            </div>
+          )}
+
+        {/* RESULTS */}
+
+        {appFlowState === "results" && !resultsLoading && (
+          <div className="flex-col bg-slate-700 h-fit m-2 rounded-lg">
+            <ResultsView {...resultsViewProps} />
+          </div>
+        )}
+      </main>
+
+      <footer className="h-32 flex justify-center">
+        <div>FOOTER STUFF</div>
+      </footer>
     </div>
   );
 }

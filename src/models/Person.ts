@@ -1,5 +1,6 @@
 export class Person {
   public possibleMatches: string[];
+  public matchName: string | undefined;
   constructor(public name: string, public email?: string) {
     this.possibleMatches = [];
   }
@@ -13,13 +14,15 @@ export class Person {
       (possibleMatches) => possibleMatches !== name
     );
   }
+  public addMatch(matchName: string) {
+    this.matchName = matchName;
+  }
 
   public getCloneForMatching() {
     const newPerson = new Person(this.name);
     this.possibleMatches.forEach((possibleMatch) =>
       newPerson.addPossibleMatch(possibleMatch)
     );
-    console.log(newPerson);
     return newPerson;
   }
 }

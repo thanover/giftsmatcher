@@ -1,14 +1,23 @@
+import { stringify } from "querystring";
 import { Person } from "../models/Person";
 import { Rule } from "../models/Rule";
-var _ = require("lodash");
 
-export function setPossibiliesOnPeople(people: Person[]): void {
+export type finalResult = {
+  name: string;
+  match: string;
+}[];
+
+export async function setPossibiliesOnPeople(
+  people: Person[]
+): Promise<Person[]> {
   people.forEach((person) => {
     const peopleArrayWithoutThisPerson = people
       .filter((_person) => _person.name !== person.name)
       .map((_person) => _person.name);
     person.possibleMatches = peopleArrayWithoutThisPerson;
   });
+
+  return people;
 }
 
 export function updatePossibilitiesDueToRuleAdded(
@@ -35,41 +44,57 @@ export function updatePossibilitiesDueToRuleDeleted(
   });
 }
 
-export function createMatches(people: Person[]) {
-  const copiedPeopleArray: Person[] = [];
+export async function createMatches(people: Person[]): Promise<finalResult> {
+  let possibleMatchesArray: { name: string; possibleMatches: string[] }[] = [];
+  const finalMatches: finalResult = [];
 
-  people.forEach((person) => {
-    copiedPeopleArray.push(person.getCloneForMatching());
-  });
+  for (const person of people) {
+    const _possibleMatches: string[] = [];
+    for (const possibleMatch of person.possibleMatches) {
+      _possibleMatches.push(possibleMatch);
+    }
+    possibleMatchesArray.push({
+      name: person.name,
+      possibleMatches: _possibleMatches,
+    });
+  }
 
-  console.log(copiedPeopleArray);
+  console.log(possibleMatchesArray);
 
-  const orderedPeopleArray = copiedPeopleArray.sort(
+  possibleMatchesArray = possibleMatchesArray.sort(
     (a, b) => a.possibleMatches.length - b.possibleMatches.length
   );
 
-  const finalResult: string[] = [];
+  console.log(possibleMatchesArray);
 
-  console.log(orderedPeopleArray);
+  for (const person of possibleMatchesArray) {
+    const indexOfMatch = Math.floor(
+      Math.random() * person.possibleMatches.length
+    );
+    const matchName = person.possibleMatches[indexOfMatch];
 
-  orderedPeopleArray.forEach((person) => {
-    const match = pickMatch(person);
-    finalResult.push(match);
+    if (!matchName) return await createMatches(people);
 
-    const nameToRemove = match.split("=>")[1];
-    orderedPeopleArray.forEach((person) => {
-      person.removePossibleMatch(nameToRemove);
-    });
-  });
+    finalMatches.push({ name: person.name, match: matchName });
 
-  console.log(finalResult);
+    for (const person of possibleMatchesArray) {
+      person.possibleMatches = person.possibleMatches.filter(
+        (name) => name !== matchName
+      );
+    }
+  }
+
+  return finalMatches;
 }
 
-function pickMatch(person: Person) {
-  let indexOfMatch = Math.floor(Math.random() * person.possibleMatches.length);
-  // while (!person.possibleMatches[indexOfMatch]) {
-  //   indexOfMatch = Math.floor(Math.random() * person.possibleMatches.length);
-  // }
+// async function pickMatch(person: Person) {
+//   let indexOfMatch = Math.floor(Math.random() * person.possibleMatches.length);
+//   // while (!person.possibleMatches[indexOfMatch]) {
+//   //   indexOfMatch = Math.floor(Math.random() * person.possibleMatches.length);
+//   // }
+//   const matchName = person.possibleMatches[indexOfMatch];
+//   // const matchedPerson = people.filter((person) => person.name !== matchName);
+//   // person.addMatch(matchName);
 
-  return `${person.name}=>${person.possibleMatches[indexOfMatch]}`;
-}
+//   return `${person.name}=>${person.possibleMatches[indexOfMatch]}`;
+// }

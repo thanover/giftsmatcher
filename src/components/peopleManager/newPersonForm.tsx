@@ -22,17 +22,18 @@ function NewPersonForm(props: NewPersonFormProps) {
 
   function validateName(name: string) {
     let error;
+    if (name === "") error = "";
     if (!props.validateField("name", name)) {
-      error = `Another participant already has the name ${name}`;
+      error = `Another participant already has the name "${name}"`;
     }
     return error;
   }
 
   const inputStyle: string =
-    "form-input px-1 py-1 rounded text-slate-300 bg-slate-700 border-0";
+    "m-1 p-2 bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500";
 
   const inputInErrorStyle: string =
-    "form-input px-1 py-1 rounded text-slate-300 bg-slate-700 border-2 border-rose-500";
+    "m-1 p-2 rounded  border border-red-500 text-red-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500";
 
   return (
     <Formik
@@ -45,7 +46,7 @@ function NewPersonForm(props: NewPersonFormProps) {
         actions.resetForm();
       }}
     >
-      {({ errors, touched }) => (
+      {({ errors, touched, values }) => (
         <Form>
           <Field
             name="name"
@@ -53,7 +54,6 @@ function NewPersonForm(props: NewPersonFormProps) {
             validate={validateName}
             className={errors.name ? inputInErrorStyle : inputStyle}
           />
-          {errors.name && touched.name && <div>{errors.name}</div>}
 
           <Field
             name="email"
@@ -61,19 +61,34 @@ function NewPersonForm(props: NewPersonFormProps) {
             placeholder="Email (optional)"
             className={errors.email ? inputInErrorStyle : inputStyle}
           />
-          {errors.email && touched.email && <div>{errors.email}</div>}
-
           <button
             type="submit"
             className={
-              errors.email || errors.name
-                ? "rounded bg-slate-400 p-1"
-                : "rounded bg-lime-500 p-1"
+              errors.email || errors.name || values.name === ""
+                ? "text-slate-400 p-1 m-1"
+                : "text-lime-500 p-1 m-1"
             }
-            disabled={errors.email || errors.name ? true : false}
+            disabled={
+              errors.email || errors.name || values.name === "" ? true : false
+            }
           >
-            Add Participant
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
+                clip-rule="evenodd"
+              />
+            </svg>
           </button>
+          <div className="text-red-600 p-4">
+            {errors.email && touched.email && <div>{errors.email}</div>}
+            {errors.name && touched.name && <div>{errors.name}</div>}
+          </div>
         </Form>
       )}
     </Formik>
