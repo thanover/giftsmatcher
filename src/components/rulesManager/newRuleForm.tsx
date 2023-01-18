@@ -10,14 +10,6 @@ export type NewRulesFormProps = {
 };
 
 function NewRulesForm(props: NewRulesFormProps) {
-  function validatePerson2(name: string) {
-    let error;
-    if (false) {
-      error = `Another participant already has the name ${name}`;
-    }
-    return error;
-  }
-
   const inputStyle: string =
     "form-input px-1 py-1 rounded text-slate-300 bg-slate-700 border-0";
 
@@ -50,11 +42,9 @@ function NewRulesForm(props: NewRulesFormProps) {
                 </option>
               ))}
           </Field>
-          {/* {errors.name && touched.name && <div>{errors.name}</div>} */}
 
           <Field
             name="email"
-            validate={validatePerson2}
             placeholder="Select who this Person can't Match with"
             className={errors.person2 ? inputInErrorStyle : inputStyle}
           />
@@ -62,11 +52,7 @@ function NewRulesForm(props: NewRulesFormProps) {
 
           <button
             type="submit"
-            className={
-              errors.person2
-                ? "rounded bg-slate-400 p-1"
-                : "rounded bg-lime-500 p-1"
-            }
+            className="rounded bg-lime-500 p-1"
             disabled={errors.person2 ? true : false}
           >
             Add Rule

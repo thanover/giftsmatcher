@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { AppFlowState } from "../../App";
 import { Person } from "../../models/Person";
 import { Rule } from "../../models/Rule";
 import RuleCreator, { RuleCreatorProps } from "./ruleCreator";
@@ -9,8 +8,6 @@ export type RulesManagerProps = {
   setPeople: React.Dispatch<React.SetStateAction<Person[]>>;
   rules: Rule[];
   setRules: React.Dispatch<React.SetStateAction<Rule[]>>;
-  appFlowState: AppFlowState;
-  setAppFlowState: React.Dispatch<React.SetStateAction<AppFlowState>>;
   updatePossibilities: (
     newRule: Rule,
     addOrRemove: "added" | "deleted"

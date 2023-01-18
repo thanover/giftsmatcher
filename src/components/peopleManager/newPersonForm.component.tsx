@@ -1,10 +1,9 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
-import { Person } from "../../models/Person";
 
 export type NewPersonFormProps = {
   validateField: (field: "email" | "name", value: string) => boolean;
-  addPerson: (newPerson: Person) => void;
+  addPerson: (name: string, email?: string) => void;
 };
 
 function NewPersonForm(props: NewPersonFormProps) {
@@ -30,7 +29,7 @@ function NewPersonForm(props: NewPersonFormProps) {
   }
 
   const inputStyle: string =
-    "m-1 p-2 bg-white border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500";
+    "m-1 p-2 bg-slate-500 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500";
 
   const inputInErrorStyle: string =
     "m-1 p-2 rounded  border border-red-500 text-red-600 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500";
@@ -42,16 +41,17 @@ function NewPersonForm(props: NewPersonFormProps) {
         email: "",
       }}
       onSubmit={(values, actions) => {
-        props.addPerson(new Person(values.name, values.email));
+        values.email
+          ? props.addPerson(values.name, values.email)
+          : props.addPerson(values.name);
         actions.resetForm();
       }}
     >
       {({ errors, touched, values }) => (
         <>
-          <h1 className="text-l font-bold p-3 pb-0">Add someone else?</h1>
           <Form>
             <div className="flex  items-center">
-              <div className="flex">
+              <div className="flex ml-1">
                 <div className="flex flex-col w-60">
                   <Field
                     name="name"
@@ -90,8 +90,8 @@ function NewPersonForm(props: NewPersonFormProps) {
                       : "flex bg-lime-500 hover:bg-lime-600 p-2 m-1 rounded-lg"
                   }
                 >
-                  Add Person
-                  <div className="pl-4">
+                  Add
+                  <div className="pl-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
@@ -99,9 +99,9 @@ function NewPersonForm(props: NewPersonFormProps) {
                       className="w-6 h-6"
                     >
                       <path
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z"
-                        clip-rule="evenodd"
+                        clipRule="evenodd"
                       />
                     </svg>
                   </div>

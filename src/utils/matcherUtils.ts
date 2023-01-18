@@ -20,29 +20,29 @@ export async function setPossibiliesOnPeople(
   return people;
 }
 
-export function updatePossibilitiesDueToRuleAdded(
-  people: Person[],
-  rule: Rule
-) {
-  people.forEach((person) => {
-    if (person.name === rule.person1.name)
-      person.removePossibleMatch(rule.person2.name);
-    if (person.name === rule.person2.name)
-      person.removePossibleMatch(rule.person1.name);
-  });
-}
+// export function updatePossibilitiesDueToRuleAdded(
+//   people: Person[],
+//   rule: Rule
+// ) {
+//   people.forEach((person) => {
+//     if (person.name === rule.person1.name)
+//       person.removePossibleMatch(rule.person2.name);
+//     if (person.name === rule.person2.name)
+//       person.removePossibleMatch(rule.person1.name);
+//   });
+// }
 
-export function updatePossibilitiesDueToRuleDeleted(
-  people: Person[],
-  rule: Rule
-) {
-  people.forEach((person) => {
-    if (person.name === rule.person1.name)
-      person.addPossibleMatch(rule.person2.name);
-    if (person.name === rule.person2.name)
-      person.addPossibleMatch(rule.person1.name);
-  });
-}
+// export function updatePossibilitiesDueToRuleDeleted(
+//   people: Person[],
+//   rule: Rule
+// ) {
+//   people.forEach((person) => {
+//     if (person.name === rule.person1.name)
+//       person.addPossibleMatch(rule.person2.name);
+//     if (person.name === rule.person2.name)
+//       person.addPossibleMatch(rule.person1.name);
+//   });
+// }
 
 export async function createMatches(people: Person[]): Promise<finalResult> {
   let possibleMatchesArray: { name: string; possibleMatches: string[] }[] = [];
