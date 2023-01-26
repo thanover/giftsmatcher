@@ -1,6 +1,4 @@
-import { stringify } from "querystring";
 import { Person } from "../models/Person";
-import { Rule } from "../models/Rule";
 
 export type finalResult = {
   name: string;
@@ -16,33 +14,8 @@ export async function setPossibiliesOnPeople(
       .map((_person) => _person.name);
     person.possibleMatches = peopleArrayWithoutThisPerson;
   });
-
   return people;
 }
-
-// export function updatePossibilitiesDueToRuleAdded(
-//   people: Person[],
-//   rule: Rule
-// ) {
-//   people.forEach((person) => {
-//     if (person.name === rule.person1.name)
-//       person.removePossibleMatch(rule.person2.name);
-//     if (person.name === rule.person2.name)
-//       person.removePossibleMatch(rule.person1.name);
-//   });
-// }
-
-// export function updatePossibilitiesDueToRuleDeleted(
-//   people: Person[],
-//   rule: Rule
-// ) {
-//   people.forEach((person) => {
-//     if (person.name === rule.person1.name)
-//       person.addPossibleMatch(rule.person2.name);
-//     if (person.name === rule.person2.name)
-//       person.addPossibleMatch(rule.person1.name);
-//   });
-// }
 
 export async function createMatches(people: Person[]): Promise<finalResult> {
   let possibleMatchesArray: { name: string; possibleMatches: string[] }[] = [];
@@ -86,15 +59,3 @@ export async function createMatches(people: Person[]): Promise<finalResult> {
 
   return finalMatches;
 }
-
-// async function pickMatch(person: Person) {
-//   let indexOfMatch = Math.floor(Math.random() * person.possibleMatches.length);
-//   // while (!person.possibleMatches[indexOfMatch]) {
-//   //   indexOfMatch = Math.floor(Math.random() * person.possibleMatches.length);
-//   // }
-//   const matchName = person.possibleMatches[indexOfMatch];
-//   // const matchedPerson = people.filter((person) => person.name !== matchName);
-//   // person.addMatch(matchName);
-
-//   return `${person.name}=>${person.possibleMatches[indexOfMatch]}`;
-// }

@@ -1,8 +1,7 @@
 import React from "react";
 import { Person } from "../../models/Person";
-import { PersonButton } from "./personBotton.component";
-import { Tooltip, Button } from "flowbite-react";
-import RestrictionsForm, { RestrictionsFormsProps } from "./restrictionsForm";
+import { PossibleMatch } from "./possibleMatch.component";
+import { Tooltip } from "flowbite-react";
 
 export type PeopleCardProps = {
   person: Person;
@@ -13,11 +12,6 @@ export type PeopleCardProps = {
 };
 
 function PeopleCard(props: PeopleCardProps) {
-  const restrictionsFormsProps: RestrictionsFormsProps = {
-    person: props.person,
-    addRestriction: props.addRestriction,
-  };
-
   return (
     <div className="flex flex-col items-center w-fit m-2 h-fit bg-slate-600 p-4 rounded-lg">
       <div className="flex w-60 h-fit items-center pb-2">
@@ -62,11 +56,11 @@ function PeopleCard(props: PeopleCardProps) {
             </div>
           </Tooltip>
         </div>
-        <ul className="mt-2 flex">
+        <ul className="flex flex-col p-2">
           {props.person.possibleMatches.map((possibleMatchName) => {
             return (
               <li key={possibleMatchName}>
-                <PersonButton
+                <PossibleMatch
                   {...{
                     name: possibleMatchName,
                     addRestriction: props.addRestriction,
@@ -79,23 +73,6 @@ function PeopleCard(props: PeopleCardProps) {
           })}
         </ul>
       </div>
-      {/* {props.showRestrictions && props.person.possibleMatches.length > 1 && (
-        <div>
-          <RestrictionsForm {...restrictionsFormsProps} />
-        </div>
-      )}
-      {props.person.restrictedMatches && (
-        <ul>
-          Current Restrictions
-          {props.person.restrictedMatches.map((restrictedName) => {
-            return (
-              <li key={restrictedName}>
-                <PersonBox name={restrictedName} />
-              </li>
-            );
-          })}
-        </ul>
-      )} */}
     </div>
   );
 }
