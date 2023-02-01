@@ -21,8 +21,8 @@ export function ToggleButton(props: ToggleButtonProps) {
   } w-fit h-fit rounded-full ${props.isActive && "cursor-pointer"}`;
 
   const onClick = () => {
-    props.actionOnClick(!isOn);
     setIsOn(!isOn);
+    props.actionOnClick(!isOn);
   };
 
   return (

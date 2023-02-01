@@ -1,7 +1,7 @@
 import React from "react";
-import { checkCircleIcon } from "./checkCircle.icon";
+import { checkCircleIcon } from "../../icons/checkCircle.icon";
 import { ToggleButton, ToggleButtonProps } from "./toggleButton.component";
-import { xCircleIcon } from "./xCircle.icon";
+import { xCircleIcon } from "../../icons/xCircle.icon";
 
 export interface CheckOrXToggleButtonProps {
   isActive: boolean;

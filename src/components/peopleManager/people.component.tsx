@@ -39,17 +39,17 @@ function People() {
   };
 
   const addRestriction = (person1: string, person2: string) => {
+    console.log("adding restriction");
     people.forEach((person) => {
       if (person.name === person1) person.addRestrictedName(person2);
-      if (person.name === person2) person.addRestrictedName(person1);
     });
     setNumOfRestrictions(numOfRestrictions + 1);
   };
 
   const deleteRestriction = (person1: string, person2: string) => {
+    console.log("deleting restriction");
     people.forEach((person) => {
       if (person.name === person1) person.removeRestrictedName(person2);
-      if (person.name === person2) person.removeRestrictedName(person1);
     });
     setNumOfRestrictions(numOfRestrictions - 1);
   };

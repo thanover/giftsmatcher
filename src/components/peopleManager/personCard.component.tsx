@@ -62,7 +62,8 @@ function PeopleCard(props: PeopleCardProps) {
               <li key={possibleMatchName}>
                 <PossibleMatch
                   {...{
-                    name: possibleMatchName,
+                    personName: props.person.name,
+                    possibleMatchName: possibleMatchName,
                     addRestriction: props.addRestriction,
                     deleteRestriction: props.deleteRestriction,
                     showRestrictions: props.showRestrictions,
